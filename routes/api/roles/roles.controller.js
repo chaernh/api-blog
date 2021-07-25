@@ -44,7 +44,7 @@ exports.insert = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const id = req.params.id
-    let data = req.body
+    const data = req.body
 
     Roles.findByIdAndUpdate(id, data).then(roles => {
         res.json({

@@ -1,13 +1,14 @@
 const express = require('express')
 const router = express.Router()
+const { auth } = require('../../../secret')
 
 const c = require('./users.controller')
 
-router.get('/', c.findAll)
-router.get('/:id', c.findById)
-router.post('/', c.insert)
-router.put('/:id', c.update)
-router.delete('/:id', c.removeById)
-router.delete('/', c.remove)
+router.get('/', auth, c.findAll)
+router.get('/:id', auth, c.findById)
+router.post('/', auth, c.insert)
+router.put('/:id', auth, c.update)
+router.delete('/:id', auth, c.removeById)
+router.delete('/', auth, c.remove)
 
 module.exports = router

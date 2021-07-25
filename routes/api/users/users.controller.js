@@ -67,7 +67,7 @@ exports.insert = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const id = req.params.id
-    let data = req.body;
+    const data = req.body;
 
     if (data.password) data.password = passwordHash.generate(data.password)
 

@@ -20,7 +20,7 @@ exports.findAll = (req, res, next) => {
     if (q.username) where['username'] = q.username
     if (q.displayName) where['displayName'] = q.displayName
     
-    Users.find(where).limit(req.query.limit || 0).skip(req.query.skip || 0).then(users => {
+    Users.find(where).limit(req.query.limit || 0).skip(req.query.skip || 0).populate('role').then(users => {
         res.json(users)
     }).catch(e => next(e))
 }
@@ -28,7 +28,7 @@ exports.findAll = (req, res, next) => {
 exports.findById = (req, res, next) => {
     const id = req.params.id
 
-    Users.findById(id).then(users => {
+    Users.findById(id).populate('role').then(users => {
         res.json(users)
     }).catch(e => next(e))
 }

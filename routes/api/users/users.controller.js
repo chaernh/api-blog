@@ -11,6 +11,26 @@
 
 const Users = require('./users.scheme')
 const passwordHash = require('password-hash')
+const createError = require('http-errors')
+
+exports.login = (username, password) => {
+    return new Promise((resolve, reject) => {
+        Users.findOne({ username })
+        .select('_id password username role')
+        .populate('role')
+        .then((foundUser) => {
+            if (!foundUser) return reject(createError(400, 'Username not found!'))
+                const hashedPassword = foundUser.password
+                const isValidPassword = passwordHash.verify(password, hashedPassword)
+                if (isValidPassword) {
+                    resolve(foundUser)
+                } else {
+                    reject(createError(400, 'Wrong Password!'))
+                }
+        })
+    })
+}
+
 
 exports.findAll = (req, res, next) => {
     const q = req.query;
@@ -47,7 +67,7 @@ exports.insert = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const id = req.params.id
-    let data = req.body;
+    const data = req.body;
 
     if (data.password) data.password = passwordHash.generate(data.password)
 

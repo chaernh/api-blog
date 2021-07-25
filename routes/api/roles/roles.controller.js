@@ -9,7 +9,7 @@
 //     }
 // ]
 
-let Roles = require('./roles.scheme')
+const Roles = require('./roles.scheme')
 
 exports.findAll = (req, res, next) => {
     const q = req.query;
@@ -25,6 +25,7 @@ exports.findAll = (req, res, next) => {
 
 exports.findById = (req, res, next) => {
     const id = req.params.id
+    
     Roles.findById(id).then(roles => {
         res.json(roles)
     }).catch(e => next(e))

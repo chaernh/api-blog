@@ -1,59 +1,80 @@
-let Users = [
-    {
-        id: "1",
-        name: "Chaerfansyah"
-    },
-    {
-        id: "2",
-        name: "Novraina"
-    }
-]
+// let Users = [
+//     {
+//         id: "1",
+//         name: "Chaerfansyah"
+//     },
+//     {
+//         id: "2",
+//         name: "Novraina"
+//     }
+// ]
+
+const Users = require('./users.scheme')
+const passwordHash = require('password-hash')
 
 exports.findAll = (req, res, next) => {
     const q = req.query;
-    let data = Users;
+    const where = {}
     
-    if (q.id) data = Users.filter(row => row.id == q.id)
-    if (q.name) data = Users.filter(row =>  row.name == q.name)
+    if (q.email) where['email'] = q.email
+    if (q.username) where['username'] = q.username
+    if (q.displayName) where['displayName'] = q.displayName
     
-    res.json({ data });
+    Users.find(where).limit(req.query.limit || 0).skip(req.query.skip || 0).then(users => {
+        res.json(users)
+    }).catch(e => next(e))
 }
 
 exports.findById = (req, res, next) => {
     const id = req.params.id
-    const data = Users.filter( row =>  row.id == id);
 
-    res.json({ id, data })
+    Users.findById(id).then(users => {
+        res.json(users)
+    }).catch(e => next(e))
 }
 
 exports.insert = (req, res, next) => {
     const data = req.body;
 
-    Users.push(data);
-
-    res.json({ data: Users });
+    data.password = passwordHash.generate(data.password)
+    Users.create(data).then(users => {
+        res.json({
+            message: 'Data inserted',
+            data: users
+        })
+    })
 }
 
 exports.update = (req, res, next) => {
     const id = req.params.id
-    let data = Users;
-    const index = Users.findIndex(row => row.id == id)
+    let data = req.body;
 
-    if (req.body.name) data[index].name = req.body.name;
+    if (data.password) data.password = passwordHash.generate(data.password)
 
-    res.json({ message: `${id} updated!`, data});
+    Users.findByIdAndUpdate(id, data).then(users => {
+        res.json({
+            message: `Data with ID ${id} updated!`,
+            data: users
+        })
+    }).catch(e => next(e))
 }
 
 exports.removeById = (req, res, next) => {
     const id = req.params.id
-    const index  = Users.findIndex(row => row.id == id)
-
-    Users.splice(index, 1)
-
-    res.json({ message: `${id} deleted!`, data: Users});
+    
+    Users.findByIdAndRemove(id).then(users => {
+        res.json({
+            message: `Data with id ${id} deleted!`,
+            data: users
+        })
+    }).catch(e => next(e))
 }
 
 exports.remove = (req, res, next) => {
-    Users = []
-    res.json({ message: `All Users removed!`, data: Users });
+    Users.remove().then(users => {
+        res.json({
+            message: 'All datas deleted!',
+            data: users
+        })
+    }).catch(e => next(e))
 }

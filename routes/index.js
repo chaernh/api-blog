@@ -7,5 +7,6 @@ router.get('/', function(req, res, next) {
 });
 
 router.use('/api', require('./api'))
+router.use('/auth', require('./auth'))
 
 module.exports = router;

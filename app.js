@@ -8,6 +8,8 @@ var indexRouter = require('./routes/index');
 const db = require('./db.config')
 db.connect();
 
+const passport = require('./passport')
+
 var app = express();
 
 app.use(logger('dev'));
@@ -15,6 +17,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(passport.initialize())
+app.use(passport.session())
 
 app.use('/', indexRouter);
 

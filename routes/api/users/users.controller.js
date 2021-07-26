@@ -12,6 +12,7 @@
 const Users = require('./users.scheme')
 const passwordHash = require('password-hash')
 const createError = require('http-errors')
+const { validationResult } = require('express-validator')
 
 exports.login = (username, password) => {
     return new Promise((resolve, reject) => {
@@ -40,7 +41,7 @@ exports.findAll = (req, res, next) => {
     if (q.username) where['username'] = q.username
     if (q.displayName) where['displayName'] = q.displayName
     
-    Users.find(where).limit(req.query.limit || 0).skip(req.query.skip || 0).populate('role').then(users => {
+    Users.find(where).limit(req.query.limit || 0).skip(req.query.skip || 0).populate('role').sort('-createdAt').then(users => {
         res.json(users)
     }).catch(e => next(e))
 }
@@ -54,6 +55,11 @@ exports.findById = (req, res, next) => {
 }
 
 exports.insert = (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+    }
+
     const data = req.body;
 
     data.password = passwordHash.generate(data.password)
@@ -66,6 +72,11 @@ exports.insert = (req, res, next) => {
 }
 
 exports.update = (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() })
+    }
+    
     const id = req.params.id
     const data = req.body;
 

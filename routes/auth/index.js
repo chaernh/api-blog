@@ -17,7 +17,7 @@ router.get('/login', passport.authenticate('basic', { failureRedirect:'/login' }
     user.expireAt = moment().add(12,'h');
     debug(user);
     const token = jwt.sign(user.toJSON(), JWT_SECRET,  { expiresIn: '12h'})
-    res.json({ token });
+    res.json({ user, token });
 })
 
 

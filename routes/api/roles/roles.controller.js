@@ -18,7 +18,7 @@ exports.findAll = (req, res, next) => {
     if (q.name) where['name'] = q.name
     if (q.name_long) where['name_long'] = q.name_long
     
-    Roles.find(where).limit(req.query.limit || 0).skip(req.query.skip || 0).then(roles => {
+    Roles.find(where).limit(req.query.limit || 0).skip(req.query.skip || 0).sort('-_id').then(roles => {
         res.json(roles)
     }).catch(e => next(e))
 }

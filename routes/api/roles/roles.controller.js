@@ -73,3 +73,8 @@ exports.remove = (req, res, next) => {
         })
     }).catch(e => next(e))
 }
+
+//check if role id is exist
+exports.cekRolesId = (id) => {
+    return Roles.findById(id)
+}

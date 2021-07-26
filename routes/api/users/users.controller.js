@@ -47,6 +47,11 @@ exports.findAll = (req, res, next) => {
 }
 
 exports.findById = (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
     const id = req.params.id
 
     Users.findById(id).populate('role').then(users => {
@@ -91,6 +96,11 @@ exports.update = (req, res, next) => {
 }
 
 exports.removeById = (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
     const id = req.params.id
     
     Users.findByIdAndRemove(id).then(users => {
@@ -108,4 +118,9 @@ exports.remove = (req, res, next) => {
             data: users
         })
     }).catch(e => next(e))
+}
+
+//checking if user or email has been registered
+exports.findByUserOrEmail = (value) => {
+    return Users.findOne({ $or: [{ username: value }, { email: value }] })
 }

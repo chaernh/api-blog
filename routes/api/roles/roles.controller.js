@@ -10,8 +10,15 @@
 // ]
 
 const Roles = require('./roles.scheme')
+const createError = require('http-errors')
+const { validationResult } = require('express-validator')
 
 exports.findAll = (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
     const q = req.query;
     const where = {}
     
@@ -24,6 +31,11 @@ exports.findAll = (req, res, next) => {
 }
 
 exports.findById = (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
     const id = req.params.id
     
     Roles.findById(id).then(roles => {
@@ -32,6 +44,11 @@ exports.findById = (req, res, next) => {
 }
 
 exports.insert = (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
     const data = req.body;
 
     Roles.create(data).then(roles => {
@@ -43,6 +60,11 @@ exports.insert = (req, res, next) => {
 }
 
 exports.update = (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
     const id = req.params.id
     const data = req.body
 
@@ -55,6 +77,11 @@ exports.update = (req, res, next) => {
 }
 
 exports.removeById = (req, res, next) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
     const id = req.params.id
 
     Roles.findByIdAndRemove(id).then(roles => {
@@ -77,4 +104,9 @@ exports.remove = (req, res, next) => {
 //check if role id is exist
 exports.cekRolesId = (id) => {
     return Roles.findById(id)
+}
+
+//check if name is exist
+exports.findByName = (value) => {
+    return Roles.findOne({ name: value })
 }

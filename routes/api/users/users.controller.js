@@ -32,7 +32,6 @@ exports.login = (username, password) => {
     })
 }
 
-
 exports.findAll = (req, res, next) => {
     const q = req.query;
     const where = {}

@@ -28,7 +28,7 @@ passport.use(new JWTStrategy({
     jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
     secretOrKey   : JWT_SECRET
 }, (user, done) => {
-    Users.findOne({ username: user.username }).populate('role')
+    Users.findOne({ username: user.username })
     .then(foundUser => {
         return done(null, foundUser)
     })

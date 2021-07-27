@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router()
 const { auth } = require('../../../secret')
-const { validation, paramValidation } = require('./roles.validation')
+const { validation, paramValidation } = require('./posts.validation')
 
-const c = require('./roles.controller')
+const c = require('./posts.controller')
 
 router.get('/', auth, c.findAll)
 router.get('/:id', auth, paramValidation, c.findById)

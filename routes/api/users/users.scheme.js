@@ -10,9 +10,13 @@ const scheme = new Schema({
         required: true,
         unique: true
     },
+    phone:{
+        type: String,
+        required: true
+    },
     displayName:{
         type: String,
-        required: false,
+        required: true
     },
     password: {
         type: String,
@@ -24,9 +28,14 @@ const scheme = new Schema({
         default: 'active'
     },
     role: {
-        type: Schema.Types.ObjectId,
-        ref: 'Roles', select:true
-    },
+        type: String,
+        enum: ['admin', 'premium_member', 'member'],
+        default: 'member'
+    }
+    // role: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Roles', select:true
+    // },
 }, 
 {
     timestamps: true

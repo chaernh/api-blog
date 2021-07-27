@@ -9,38 +9,19 @@
 //     }
 // ]
 
-const Users = require('./users.scheme')
+const Users = require('./posts.scheme')
 const passwordHash = require('password-hash')
 const createError = require('http-errors')
 const { validationResult } = require('express-validator')
-
-exports.login = (username, password) => {
-    return new Promise((resolve, reject) => {
-        Users.findOne({ username })
-        .select('_id password username role')
-        .then((foundUser) => {
-            if (!foundUser) return reject(createError(400, 'Username not found!'))
-                const hashedPassword = foundUser.password
-                const isValidPassword = passwordHash.verify(password, hashedPassword)
-                if (isValidPassword) {
-                    resolve(foundUser)
-                } else {
-                    reject(createError(400, 'Wrong Password!'))
-                }
-        })
-    })
-}
 
 exports.findAll = (req, res, next) => {
     const q = req.query;
     const where = {}
     
-    if (q.email) where['email'] = q.email
-    if (q.username) where['username'] = q.username
-    if (q.displayName) where['displayName'] = q.displayName
-    if (q.phone) where['phone'] = q.phone
+    if (q.title) where['title'] = q.title
+    // if (q.category) where['category'] = q.category
     
-    Users.find(where).limit(req.query.limit || 0).skip(req.query.skip || 0).sort('-createdAt').then(users => {
+    Users.find(where).limit(req.query.limit || 0).skip(req.query.skip || 0).populate('author').sort('-createdAt').then(users => {
         res.json(users)
     }).catch(e => next(e))
 }
@@ -53,7 +34,7 @@ exports.findById = (req, res, next) => {
 
     const id = req.params.id
 
-    Users.findById(id).then(users => {
+    Users.findById(id).populate('author').then(users => {
         res.json(users)
     }).catch(e => next(e))
 }
@@ -65,8 +46,7 @@ exports.insert = (req, res, next) => {
     }
 
     const data = req.body;
-
-    data.password = passwordHash.generate(data.password)
+    
     Users.create(data).then(users => {
         res.json({
             message: 'Data inserted',
@@ -118,9 +98,4 @@ exports.remove = (req, res, next) => {
             data: users
         })
     }).catch(e => next(e))
-}
-
-//checking if user or email has been registered
-exports.findByUserOrEmail = (value) => {
-    return Users.findOne({ $or: [{ username: value }, { email: value }] })
 }

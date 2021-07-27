@@ -7,30 +7,31 @@ chai.use(chaiHttp)
 chai.should()
 
 let expect = chai.expect
-describe('Roles Endpoint', () => {
-    it("Should be unauthorized to get all roles without token", (done) => {
-        chai.request(server).get('/api/roles').end((err, res) => {
+
+describe("Users endpoint", () => {
+    it("Should be unauthorized to get all users without token", (done) => {
+        chai.request(server).get('/api/users').end((err, res) => {
             res.should.have.status(401)
             done()
         })
     })
 
-    it("Should be unauthorized to insert new roles without token", (done) => {
-        chai.request(server).post('/api/roles').end((err, res) => {
+    it("Should be unauthorized to insert new users without token", (done) => {
+        chai.request(server).post('/api/users').end((err, res) => {
             res.should.have.status(401)
             done()
         })
     })
 
-    it("Should be unauthorized to update roles without id", (done) => {
-        chai.request(server).put('/api/roles').end((err, res) => {
+    it("Should be unauthorized to update users without id", (done) => {
+        chai.request(server).put('/api/users').end((err, res) => {
             res.should.have.status(404)
             done()
         })
     })
 
-    it("Should be unauthorized to delete roles without token", (done) => {
-        chai.request(server).delete('/api/roles').end((err, res) => {
+    it("Should be unauthorized to delete users without token", (done) => {
+        chai.request(server).delete('/api/users').end((err, res) => {
             res.should.have.status(401)
             done()
         })
@@ -51,9 +52,9 @@ describe("Login", ()=> {
         });
     });
 
-    it("should get all roles", (done)=> {
+    it("should get all users", (done)=> {
         chai.request(server)
-        .get('/api/roles')
+        .get('/api/users')
         .set('authorization',`Bearer ${token}`)
         .end((err, res) => {
             expect(err).to.be.null;

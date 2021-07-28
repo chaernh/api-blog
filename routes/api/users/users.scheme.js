@@ -29,7 +29,7 @@ const scheme = new Schema({
     },
     role: {
         type: String,
-        enum: ['admin', 'premium_member', 'member'],
+        enum: ['admin', 'member'],
         default: 'member'
     }
     // role: {

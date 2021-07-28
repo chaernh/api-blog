@@ -5,8 +5,8 @@ const { validation, paramValidation } = require('./posts.validation')
 
 const c = require('./posts.controller')
 
-router.get('/', auth, c.findAll)
-router.get('/:id', auth, paramValidation, c.findById)
+router.get('/', c.findAll)
+router.get('/:id', paramValidation, c.findById)
 router.post('/', auth, validation, c.insert)
 router.put('/:id', auth, paramValidation, validation, c.update)
 router.delete('/:id', auth, paramValidation, c.removeById)

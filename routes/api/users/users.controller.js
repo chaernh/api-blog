@@ -1,13 +1,3 @@
-// let Users = [
-//     {
-//         id: "1",
-//         name: "Chaerfansyah"
-//     },
-//     {
-//         id: "2",
-//         name: "Novraina"
-//     }
-// ]
 
 const Users = require('./users.scheme')
 const passwordHash = require('password-hash')

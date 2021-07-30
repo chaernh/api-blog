@@ -12,10 +12,10 @@ var debug = require('debug')('project:auth')
 //     res.json({ currentUser: user })
 // })
 
-router.get('/login', passport.authenticate('basic', { failureRedirect:'/login' }), (req, res, next)=>{
+router.post('/login', passport.authenticate('basic', { failureRedirect:'/login' }), (req, res, next)=>{
     const user = req.user
     user.expireAt = moment().add(12,'h');
-    debug(user);
+    // debug(user);
     const token = jwt.sign(user.toJSON(), JWT_SECRET,  { expiresIn: '12h'})
     res.json({ user, token });
 })
